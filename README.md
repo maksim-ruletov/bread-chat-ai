@@ -12,7 +12,7 @@ BreadChatAI is a KeyStroke application that will help you optimize your work usi
 
 ### 🔴 Code highlighting
 
-<img src="https://github.com/maksim-ruletov/bread-chat-ai/blob/release/screenshots/color_hightlighting.png">
+<img src="[https://github.com/maksim-ruletov/bread-chat-ai/blob/release/screenshots/color_hightlighting.pn](https://github.com/maksim-ruletov/bread-chat-ai/blob/main/screenshots/color_hightlighting.png)g">
 
 > Support C, C++, C#, Java, PHP, Python, Ruby, JavaScript, Go
 
