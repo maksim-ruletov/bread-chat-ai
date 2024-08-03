@@ -1,0 +1,97 @@
+.chats-wrapper {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: -100%;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: -102;
+
+    .chats-wrapper__close, .chats-wrapper__settings {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        background: unset;
+        font-size: 18px;
+        border-radius: 6px;
+        transition: background var(--animation);
+        width: 40px;
+        height: 40px;
+    }
+
+    .chats-wrapper__settings {
+        left: 10px;
+    }
+
+    .chats-wrapper__close:hover, .chats-wrapper__settings:hover {
+        background: var(--accent-hover-cl);
+    }
+
+    .chats-wrapper__button {
+        width: 180px;
+        height: 35px;
+        cursor: pointer;
+        background: var(--accent-cl);
+        border-radius: 6px;
+        user-select: none;
+        transition: background var(--animation);
+    }
+
+    .chats-wrapper__button:hover {
+        background: var(--accent-hover-cl);
+    }
+
+    .chats-wrapper__list {
+        width: 300px;
+        height: 70%;
+        /* background: var(--accent-cl); */
+        overflow: hidden;
+        user-select: none;
+        margin-bottom: 50px;
+
+        .list__item {
+            width: 100%;
+            height: 40px;
+            padding-left: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background var(--animation);
+            border-radius: 6px;
+            background: unset;
+
+            .item__name {
+                width: calc(100% - 90px);
+                height: 40px;
+                display: flex;
+                align-items: center;
+            }
+
+            .item__rename, .item__delete {
+                width: 20px;
+                height: 100%;
+                position: absolute;
+                right: 10px;
+                cursor: pointer;
+                justify-content: center;
+                align-items: center;
+                top: 0;
+                opacity: 0;
+                background: unset !important;
+            }
+
+            .item__rename {
+                right: 40px;
+            }
+        }
+
+        .list__item:hover {
+            background: var(--accent-hover-cl);
+        }
+    }
+}

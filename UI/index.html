@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="../fonts/css/all.min.css">
+        <link rel="stylesheet" href="../UI/css/highlight.min.css">
+
+        <meta charset="UTF-8">
+
+        <script src="../scripts/jquery.js"></script>
+        <script src="../rtc/rtc.dynamics/elementBuilder.js"></script>
+        <script src="../rtc/rtc.data/repository.js"></script>
+
+        <script src="../rtc/rtc.floats/note.js"></script>
+
+        <script src="../scripts/Utils.js"></script>
+
+        <script src="../scripts/ChatWorker.js"></script>
+        <script src="../scripts/BookmarksWorker.js"></script>
+        <script src="../scripts/Interface.js"></script>
+        <script src="../scripts/Generator.js"></script>
+
+        <script src="../scripts/HotkeyManager.js"></script>
+        <script src="../scripts/HotkeyStore.js"></script>
+        <script src="../scripts/HotkeyChanger.js"></script>
+
+        <script src="../scripts/ThemeManager.js"></script>
+
+        <script src="../scripts/DropDownMenu.js"></script>
+
+        <script src="../scripts/BridgeWorker.js"></script>
+        <script src="../scripts/InternalAllocator.js"></script>
+
+        <script src="../rtc/rtc.token/tokenParser.js"></script>
+        <script src="../rtc/rtc.interface/tokenPopup.js"></script>
+        <script src="../rtc/rtc.handlers/tokenPopupHandler.js"></script>
+        <script src="../rtc/rtc.handlers/activeTokenManger.js"></script>
+
+        <script src="../rtc/rtc.interface/menuControlButtons.js"></script>
+
+        <script src="../rtc/rtc.chats/nameEditor.js"></script>
+
+        <script src="../rtc/rtc.contextMenu/contextMenuWorker.js"></script>
+        <script src="../rtc/rtc.contextMenu/contextMenuHandler.js"></script>
+
+        <script src="../rtc/rtc.client/message.js"></script>
+        <script src="../rtc/rtc.client/client.js"></script>
+
+        <script src="../rtc/rtc.dynamics/elementBuilder.js"></script>
+        <script src="../rtc/rtc.dynamics/messageParser.js"></script>
+        <script src="../rtc/rtc.dynamics/contentWithToken.js"></script>
+        <script src="../rtc/rtc.dynamics/contentWithoutToken.js"></script>
+
+        <script src="../rtc/rtc.localisation/localisation.js"></script>
+
+        <script src="../scripts/marked.js"></script>
+        <script src="../scripts/highlight.min.js"></script>
+
+        <script src="../highlights/c.min.js"></script>
+        <script src="../highlights/cpp.min.js"></script>
+        <script src="../highlights/csharp.min.js"></script>
+        <script src="../highlights/css.min.js"></script>
+        <script src="../highlights/go.min.js"></script>
+        <script src="../highlights/java.min.js"></script>
+        <script src="../highlights/javascript.min.js"></script>
+        <script src="../highlights/php.min.js"></script>
+        <script src="../highlights/python.min.js"></script>
+        <script src="../highlights/ruby.min.js"></script>
+
+        <link rel="stylesheet" href="../highlights/styles/default.min.css">
+        <link rel="stylesheet" href="../highlights/styles/vs2015.min.css">
+
+        <script>
+            const ANIMATION_TIME = 110;
+            ThemeManager.LoadTheme();
+            const ALLOCATOR = new Allocator();
+            const SETTINGS_MANAGER = new SettingsManager();
+            const CHATS_MANAGER = new ChatsManager();
+            const BOOKMARKS_MANAGER = new BookmarksManager();
+            const WELCOME_SCREEN_MANAGER = new WelcomeScreenManager();
+            const INPUT_BOX_MANAGER = new InputBoxManager();
+            const CHAT_WORKER = new ChatWorker();
+            const HOTKEY_CHANGER = new HotkeyChanger();
+
+            const ADD_TOKEN_POPUP = new TokenPopup();
+            const ADD_TOKEN_HANDLER = new TokenEventManager();
+            const TOKEN_MANAGER = new ActiveTokenManager();
+            const TOKENS = new TokenParser();
+
+            const MENU_CONTROL_BUTTON = new ControlButton();
+
+            const NAME_EDITOR = new NameEditor();
+
+            const CONTEXT_MENU_WORKER = new ContextMenuWorker();
+            const BOOKMARKS_CONTEXT_MANAGER = new BookmarksContextMenuWorker();
+            const CONTEXT_MENU = new ContextMenu();
+
+            let registerHotkeys = [];
+            const hotkeyStore = new HotkeyStore();
+
+            //
+
+            const client = new Client();
+            const messages = new Repository();
+            let lastMessageId = 0;
+        </script>
+    </head>
+    <body>
+        <div class="main bg">
+            <div class="main__wrapper bg">
+
+                <div class="chatgpt">
+                    <div class="chatgpt__menu">
+                        <button onclick="CONTEXT_MENU_WORKER._hideContextMenu(); CHATS_MANAGER._showChats();" class="menu__burger">
+                            <span class="fa-regular fa-list awesome"></span>
+                        </button>
+                        <div onclick="CHATS_MANAGER._showChats(); CONTEXT_MENU_WORKER._hideContextMenu();" class="menu__current-chat-name"></div>
+                        <div class="menu__buttons">
+                            <button onclick="BOOKMARKS_MANAGER._showBookmarks(); CONTEXT_MENU_WORKER._hideContextMenu();" class="buttons__button"><span class="fa-regular fa-bookmark awesome"></span></button>
+                        </div>
+                    </div>
+
+                    <div class="chatgpt__welcome">
+                        <div class="welcome__hotkey">
+                            <span class="hotkey__name" translate="app.welcome.title.open-chats"></span>
+                            <span class="hotkey__item">Ctrl</span>
+                            +
+                            <span class="hotkey__item">S</span>
+                        </div>
+                        <div class="welcome__hotkey">
+                            <span class="hotkey__name" translate="app.welcome.title.open-settings"></span>
+                            <span class="hotkey__item">Ctrl</span>
+                            +
+                            <span class="hotkey__item" style="padding-left: 10px; padding-right: 10px;">,</span>
+                        </div>
+                        <div class="welcome__hotkey">
+                            <span class="hotkey__name" translate="app.welcome.title.open-bookmarks"></span>
+                            <span class="hotkey__item">Ctrl</span>
+                            +
+                            <span class="hotkey__item">D</span>
+                        </div>
+                    </div>
+
+                    <div class="chatgpt__chat"></div>
+
+                    <div class="chatgpt__search-box" style="display: none;">
+                        <div onclick="client._resetContext();" class="search-box__reset search-box__button hover accent">
+                            <span class="fa-regular fa-rotate-right awesome"></span>
+                        </div>
+                        <input class="search-box__input hover accent">
+                        <div class="search-box__send search-box__button hover accent">
+                            <span class="fa-regular fa-paper-plane-top awesome"></span>
+                        </div>
+                    </div>
+
+                    <div class="chatgpt__control-button">
+                        <button id="control-button"></button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.querySelector('.search-box__input').addEventListener('focus', (event) => {
+                    CONTEXT_MENU_WORKER._hideContextMenu();
+                });
+
+                document.querySelector('.search-box__send').addEventListener('click', (event) => {
+                    if (client._checkWaitingResponse())
+                    {
+                        return Note.createNote(api.localisation[api.getConfig().language]['errors.please-wait'], 1500);
+                    }
+
+                    let t_message = $('.search-box__input').val();
+
+                    CONTEXT_MENU_WORKER._hideContextMenu();
+
+                    $('.search-box__input').val("");
+                    $('.search-box__input').disabled = true;
+
+                    if (!t_message)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        sendMessage(t_message);
+                    }
+                });
+            </script>
+
+            
+            <div class="settings bg" style="opacity: 0; z-index: -100;">
+                <div class="settings__selector">
+                    <div class="settings__selector-item hover" id="general">
+                        <span class="fa-regular fa-gear awesome"></span>
+                    </div>
+                    <div class="settings__selector-item hover" id="keyboard">
+                        <span class="fa-regular fa-keyboard awesome"></span>
+                    </div>
+                    <div class="settings__selector-item hover" id="chatgpt">
+                        <svg class="settings__selector-item-icon chatgpt-icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48"><path fill="#546e7a" d="M30.7,7.27L28.33,9.1c-1.605-2.067-4.068-3.209-6.697-3.092C17.313,6.2,14,9.953,14,14.277l0,9.143	l10.5,6.12l-1,1.72l-11.706-6.827C11.302,24.146,11,23.62,11,23.051l0-8.687C11,8.1,16.129,2.79,22.39,3.007	C25.669,3.12,28.68,4.663,30.7,7.27z"></path><path fill="#546e7a" d="M12.861,9.833l0.4,2.967c-2.592,0.357-4.813,1.919-6.026,4.254c-1.994,3.837-0.4,8.582,3.345,10.745	l7.918,4.571l10.55-6.033l0.99,1.726l-11.765,6.724c-0.494,0.282-1.101,0.281-1.594-0.003l-7.523-4.343	C3.73,27.308,1.696,20.211,5.014,14.898C6.752,12.114,9.594,10.279,12.861,9.833z"></path><path fill="#546e7a" d="M6.161,26.563l2.77,1.137c-0.987,2.423-0.745,5.128,0.671,7.346	c2.326,3.645,7.233,4.638,10.977,2.476l7.918-4.572l0.05-12.153l1.99,0.006l-0.059,13.551c-0.002,0.569-0.307,1.094-0.8,1.379	l-7.523,4.343c-5.425,3.132-12.588,1.345-15.531-4.185C5.083,32.994,4.914,29.616,6.161,26.563z"></path><path fill="#546e7a" d="M17.3,40.73l2.37-1.83c1.605,2.067,4.068,3.209,6.697,3.092C30.687,41.8,34,38.047,34,33.723l0-9.143	l-10.5-6.12l1-1.72l11.706,6.827C36.698,23.854,37,24.38,37,24.949l0,8.687c0,6.264-5.13,11.574-11.39,11.358	C22.331,44.88,19.32,43.337,17.3,40.73z"></path><path fill="#546e7a" d="M35.139,38.167l-0.4-2.967c2.592-0.357,4.813-1.919,6.026-4.254c1.994-3.837,0.4-8.582-3.345-10.745	l-7.918-4.571l-10.55,6.033l-0.99-1.726l11.765-6.724c0.494-0.282,1.101-0.281,1.594,0.003l7.523,4.343	c5.425,3.132,7.459,10.229,4.141,15.543C41.248,35.886,38.406,37.721,35.139,38.167z"></path><path fill="#546e7a" d="M41.839,21.437l-2.77-1.137c0.987-2.423,0.745-5.128-0.671-7.346	c-2.326-3.645-7.233-4.638-10.977-2.476l-7.918,4.572l-0.05,12.153l-1.99-0.006l0.059-13.551c0.002-0.569,0.307-1.094,0.8-1.379	l7.523-4.343c5.425-3.132,12.588-1.345,15.531,4.185C42.917,15.006,43.086,18.384,41.839,21.437z"></path></svg>
+                    </div>
+                </div>
+
+                <div class="settings__content">
+                    <div id="general-content">
+                        <div class="settings__content-title text-active"><span translate="settings.content.title.general"></span></div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.language"></span>
+                            <div class="content-item__menu" id="dropdown" modifier="language">
+                                <div class="content-item__menu-wrapper hover accent">    
+                                    <span class="content-item__menu-span" id="active-language"></span>
+                                    <span class="fa-regular fa-chevron-down awesome menu-wrapper__chevron"></span>
+                                </div>
+                                <div class="content-item__menu-dropdown accent" id="language-dropdown-list">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.theme"></span>
+                            <div class="content-item__menu" id="dropdown" modifier="theme">
+                                <div class="content-item__menu-wrapper hover accent">    
+                                    <span class="content-item__menu-span" id="active-theme"></span>
+                                    <span class="fa-regular fa-chevron-down awesome menu-wrapper__chevron"></span>
+                                </div>
+                                <div class="content-item__menu-dropdown accent" id="theme-dropdown-list">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.debug"></span>
+                            <div class="content-item__button hover accent" onclick="api.shell.openPath(`${api.appdata}\\UndevSoftware\\BreadChatAI`);"><span translate="settings.content.button"></span></div>
+                        </div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.open-default-chat"></span> 
+                            <input type="checkbox" id="open-chat" class="ui-checkbox">
+                        </div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.lose-focus"></span> 
+                            <input type="checkbox" id="lose-focus" class="ui-checkbox">
+                        </div>
+
+                        <div class="settings__content-item">
+                            <span class="content-item__title" translate="settings.content.points.auto-start"></span> 
+                            <input type="checkbox" id="auto-start" class="ui-checkbox">
+                        </div>
+                        
+                        <div class="settings__content-item" style="margin-top: 50px;">
+                            <span class="content-item__title" translate="settings.content.points.version"></span>
+                            <span id="version"></span>
+                        </div>
+
+                        <script>
+                            api.invoke('get-version').then(version => document.querySelector('#version').textContent = version)
+
+                            if (api.config['open-first-chat']) {
+                                document.querySelector('#open-chat').checked = true;
+                            }
+
+                            if (api.config['lose-focus-on-blur']) {
+                                document.querySelector('#lose-focus').checked = true;
+                            }
+
+                            if (api.getConfig()['auto-launch']) {
+                                document.querySelector('#auto-start').checked = true;
+                            }
+
+                            document.querySelector('#open-chat').addEventListener('change', () => {
+                                api.ipcRenderer.invoke('change-auto-open-first-chat', document.querySelector('#open-chat').checked);
+                            });
+
+                            document.querySelector('#lose-focus').addEventListener('change', () => {
+                                api.ipcRenderer.invoke('change-lose-focus', document.querySelector('#lose-focus').checked);
+                            });
+
+                            document.querySelector('#auto-start').addEventListener('change', () => {
+                                api.ipcRenderer.invoke('@system::app::auto-launch', document.querySelector('#auto-start').checked);
+                            });
+                        </script>
+
+                        <!-- <div class="settings__content-info bg">
+                            <a href="#" class="content-info__item hover accent" style="display: none;"><span>Site comming soon...</span></a>
+                            <a target="_blank" href="https://github.com/UndevSoftware/bread-chat-ai" class="content-info__item hover accent"><span>GitHub</span></a>
+                        </div> -->
+                    </div>
+
+                    <div id="chatgpt-content" style="opacity: 0; display: none; overflow-y: scroll; height: 100%; padding-bottom: 30px;">
+                        <div class="settings__content-title text-active"><span translate="settings.content.title.ai"></span></div>
+                        <div class="content__tokens-list">
+
+                        </div>
+                        <div class="button__wrapper">
+                            <button class="content__add-token" onclick="ADD_TOKEN_POPUP._showPopup()">
+                                <span class="fa-regular fa-plus awesome"></span>
+                                <span translate="settings.add-token.add-button"></span>
+                            </button>
+                        </div>
+
+                        <div class="content__popup-wrapper">
+                            <div class="content__add-token-popup">
+                                <h3 class="add-token-popup__header" translate="settings.add-token.service-title"></h3>
+                                <div class="content-item__menu" id="dropdown" modifier="service">
+                                    <div class="content-item__menu-wrapper hover accent">    
+                                        <span class="content-item__menu-span" id="active-service" translate="settings.add-token.select"></span>
+                                    <div class="menu-wrapper__chevron">
+                                        <span class="fa-regular fa-chevron-down awesome"></span>
+                                    </div>
+                                    </div>
+                                    <div class="content-item__menu-dropdown accent" id="service-dropdown-list" style="opacity: 0;">
+                                        <div service="chatgpt">ChatGPT 3.5</div>
+                                    </div>
+                                </div>
+                                <h3 class="add-token-popup__header" style="margin-top: 10px;" translate="settings.add-token.token.title"></h3>
+                                <input type="text" class="add-token-popup__token">
+                                <button class="add-token-popup__confirm" onclick="handleClick()" translate="settings.confirm.button"></button>
+                            </div>
+                            <div class="popup-wrapper__close" onclick="ADD_TOKEN_POPUP._hidePopup()">
+                                <div class="close__icon-wrapper hover">
+                                    <span class="fa-regular fa-xmark awesome close__icon"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            function handleClick() {
+                                confirmButtonClickHandler().then(response => {
+                                    ADD_TOKEN_HANDLER._reset();
+                                    ADD_TOKEN_POPUP._hidePopup();
+
+                                    document.querySelector('.content__tokens-list').innerHTML += `<div token-id="${response.tokenIndex}" class="tokens-list__item"><div>${response.value[0]}${response.value[1]}${response.value[2]}${response.value[3]}${response.value[4]}${response.value[5]}${response.value[6]}&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902&#8902</div><div onclick="ActiveTokenManager.deleteToken('${response.tokenIndex}')" class="item__delete" style="opacity: 0"><span class="fa-regular fa-trash awesome"></span></div></div>`;
+                                    
+                                    if (document.querySelector('.content__tokens-list').children.length === 1)
+                                    {
+                                        TOKEN_MANAGER._markActiveToken();
+                                        wt_generate();
+                                    }
+
+                                    TOKENS._tokens.push(document.querySelector(`[token-id="${response.tokenIndex}"]`));
+
+                                    TOKEN_MANAGER._clear();
+                                    TOKEN_MANAGER._collect();
+                                    TOKEN_MANAGER._addListeners();
+                                    TOKENS._applyTrashAnimations();
+                                });
+                            }
+                        </script>
+                    </div>
+
+                    <div id="keyboard-content" style="opacity: 0; display: none; overflow-y: scroll; height: 100%;">
+                        <div class="settings__content-title text-active"><span translate="settings.content.title.keyboard"></span></div>
+                        <div class="content__main-hotkey">
+                            <h3 class="hotkey__header" translate="settings.main-hotkey.title"></h3>
+                            <div class="hotkey__entry"></div>
+                            <div class="hotkey__buttons">
+                                <button class="hotkey__change" onclick="HotkeyListener.resetToDefault()" translate="settings.default.button" style="border-radius: 0;"></button>
+                                <button class="hotkey__change" onclick="HotkeyListener._changeControlHotkey()" translate="settings.edit.button"></button>
+                            </div>
+                        </div>
+                        <div id="hotkeys-list" class="settings__content-info bg" style="bottom: 0; flex-direction: column;">
+                            
+                        </div>
+                        <script>
+                            api.ipcRenderer.invoke('get-hotkey').then(response => document.querySelector('.hotkey__entry').innerHTML = `<span>${response}</span>`);
+                        </script>
+                    </div>
+                </div>
+
+                <div class="settings__close">
+                    <div class="close__icon-wrapper hover" onclick="SETTINGS_MANAGER._hideSettings()">
+                        <span class="fa-regular fa-xmark awesome close__icon"></span>
+                    </div>
+                </div>
+                
+                <div class="settings__change-popup accent">
+                    <button onclick="SettingsPopupManager.DeclineChanges()" class="change-popup__button bg hover" translate="app.popup.buttons.decline" id="decline"></button>
+                    <button class="change-popup__button bg hover" translate="app.popup.buttons.apply" id="restart"></button>
+                </div>
+
+                <div class="settings__hotkey-listener">
+                    <div class="hotkey-listener__popup">
+                        <h3 class="popup__heading" translate="settings.hotkey-change.title"></h3>
+                        <div class="popup__hotkeys-output"></div>
+                    </div>
+                    <button class="hotkey__submit-button" style="cursor: not-allowed;" translate="settings.confirm.button"></button>
+                    <button onclick="HotkeyListener._closeHotkeyListener()" class="popup_close">
+                        <span class="fa-regular fa-xmark awesome"></span>
+                    </button>
+                </div>
+
+                <div class="blur-block-2 bg"></div>
+            </div>
+
+            <div class="chats-wrapper">
+                <div class="chats-wrapper__list">
+
+                </div>
+                <button onclick="client._createChat()" class="chats-wrapper__button" translate="app.chats.buttons.add"></button>
+                <button onclick="CHATS_MANAGER._hideChats(); SETTINGS_MANAGER._showSettings();" class="chats-wrapper__settings">
+                    <span class="fa-regular fa-gear awesome"></span>
+                </button>
+                <button onclick="CHATS_MANAGER._hideChats()" class="chats-wrapper__close">
+                    <span class="fa-regular fa-xmark awesome"></span>
+                </button>
+            </div>
+
+            <div class="bookmarks bg" style="opacity: 0; z-index: -100;">
+                <div class="bookmarks__list">
+                    
+                </div>
+
+                <div class="bookmarks__close" onclick="BOOKMARKS_MANAGER._hideBookmarks(); BOOKMARKS_CONTEXT_MANAGER._hideContextMenu()">
+                    <div class="close__icon-wrapper hover">
+                        <span class="fa-regular fa-xmark awesome close__icon"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial">
+                
+            </div>
+
+            <div class="main-context-menu">
+                <button class="main-context-menu__button">
+                    <span class="button__icon fa-regular fa-copy awesome"></span>
+                    <span translate="app.context-menu.copy"></span>
+                </button>
+                <button class="main-context-menu__button">
+                    <span class="button__icon fa-regular fa-bookmark awesome"></span>
+                    <span translate="app.context-menu.save"></span>
+                </button>
+            </div>
+
+            <div class="bookmarks-context-menu">
+                <button class="main-context-menu__button">
+                    <span class="button__icon fa-regular fa-copy awesome"></span>
+                    <span translate="app.context-menu.copy"></span>
+                </button>
+                <button class="main-context-menu__button">
+                    <span class="button__icon fa-regular fa-trash awesome"></span>
+                    <span translate="app.context-menu.delete"></span>
+                </button>
+            </div>
+
+            <div class="blur-block bg"></div>
+
+            <div class="notifier"></div>
+        </div>
+
+        <script src="../scripts/Translate.js"></script>
+        <script src="../scripts/LanguageManager.js"></script>
+        <script src="../rtc/rtc.core/core.js"></script>
+    </body>
+</html>

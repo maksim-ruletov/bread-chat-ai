@@ -1,0 +1,33 @@
+.main-context-menu, .bookmarks-context-menu {
+    width: 130px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    border-radius: 6px;
+    background: var(--accent-cl);
+    z-index: -1000;
+    overflow: hidden;
+
+    .main-context-menu__button {
+        width: 100%;
+        height: 35px;
+        cursor: pointer;
+        background: unset;
+        user-select: none;
+        transition: background var(--animation);
+        padding: 0;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+
+        .button__icon {
+            width: 30px !important;
+        }
+    }
+
+    .main-context-menu__button:hover {
+        background: var(--accent-hover-cl);
+    }
+}

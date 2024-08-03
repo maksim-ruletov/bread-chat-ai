@@ -1,0 +1,320 @@
+@import "./settings.css";
+@import "./main.css";
+@import "./bookmarks.css";
+@import "./checkbox.css";
+@import "./contextMenu.css";
+@import "./notifier.css";
+@import "./chats.css";
+
+.main {
+    background: var(--bg-cl);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+
+    .main__wrapper {
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-cl);
+    }
+}
+
+
+
+.selector {
+    padding-top: 10px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    .selector__chevron {
+        opacity: 20%;
+    }
+}
+
+
+
+.chatgpt {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .chatgpt__menu {
+        width: 560px;
+        height: 45px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        background: var(--accent-cl);
+        border-radius: 6px;
+        margin: 0 auto;
+        margin-top: 10px;
+        position: relative;
+        z-index: 1;
+        transition: background var(--animation);
+        cursor: pointer;
+
+        .menu__current-chat-name {
+            width: 100%;
+            height: 100%;
+            margin: 0 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu__burger {
+            width: 45px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            cursor: pointer;
+            transition: color var(--animation);
+            background: unset;
+        }
+
+        .menu__buttons {
+            position: absolute;
+            right: 10px;
+            height: 100%;
+
+            .buttons__button {
+                background: unset !important;
+                margin: 0 5px;
+                cursor: pointer;
+                width: 20px;
+                height: 100%;
+                font-size: 16px;
+                transition: color var(--animation);
+            }
+
+            .buttons__button:hover {
+                color: var(--text-active-cl);
+            }
+        }
+    }
+
+    .chatgpt__menu:hover {
+        background: var(--accent-hover-cl);
+    }
+
+    .chatgpt__chat {
+        height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        overflow-y: scroll;
+
+        .chat__question {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 16px;
+            word-break: break-all;
+
+            .question__text-wrapper {
+                padding: 10px;
+                max-width: 80%;
+                background-color: var(--accent-cl);
+                display: inline-block;
+                border-radius: 10px 10px 10px 2px;
+                user-select: none;
+            }
+        }
+
+        .chat__answer {
+            width: 100%;
+            padding: 5px 20px;
+            display: flex;
+            word-break: break-all;
+
+            .answer__text-wrapper {
+                padding: 10px;
+                max-width: 90%;
+                background-color: var(--accent-cl);
+                display: inline-block;
+                border-radius: 10px 10px 2px 10px;
+                transition: background var(--animation);
+                cursor: pointer;
+            }
+
+            .answer__text-wrapper:hover {
+                background: var(--accent-hover-cl);
+            }
+        }
+    }
+
+
+    .chatgpt__welcome {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        user-select: none;
+    }
+
+
+    .chatgpt__search-box {
+        height: 60px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 0;
+        opacity: 0;
+
+        .search-box__button {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            background: var(--accent-cl);
+        }
+
+        .search-box__input {
+            width: 70%;
+            height: 40px;
+            padding: 0 10px;
+            margin: 0 20px;
+            border-radius: 12px;
+            background: var(--accent-cl);
+            cursor: text;
+        }
+    }
+}
+
+.blur-block {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-cl);
+    z-index: -101;
+    opacity: 0;
+    top: 0;
+    left: 0;
+}
+
+.blur-block-2 {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-cl);
+    z-index: -101;
+    opacity: 0;
+    top: 0;
+    left: 0;
+}
+
+.welcome__hotkey {
+    margin: 10px 0;
+}
+
+.hotkey__item {
+    padding: 5px;
+    background: var(--accent-cl);
+    border-bottom: 1px solid var(--scrollbar-cl);
+    border-radius: 6px;
+}
+
+.hotkey__name {
+    margin-right: 10px;
+}
+
+.tutorial {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -102;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    .tutorial__popup {
+        width: 400px;
+        padding: 10px;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .popup__description {
+            text-align: center;
+            user-select: none;
+            margin: 10px 0;
+        }
+
+        .popup__heading {
+            position: fixed;
+            top: 0;
+            margin: 20px 0;
+            user-select: none;
+        }
+
+        .popup__icon {
+            font-size: 30px;
+            margin: 10px 0;
+        }
+
+        .popup__buttons {
+            position: fixed;
+            bottom: 0;
+            margin: 20px 0;
+
+            .popup__button {
+                padding: 10px 20px;
+                margin: 0 5px;
+                border-radius: 6px;
+                background: var(--accent-cl);
+                user-select: none;
+                cursor: pointer;
+                transition: background var(--animation);
+            }
+
+            .popup__button:hover {
+                background: var(--bg-cl);
+            }
+        }
+    }
+}
+
+.chatgpt__control-button {
+    width: 100%;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    user-select: none;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    opacity: 0;
+
+    #control-button {
+        padding: 5px 50px;
+        height: 40px;
+        background: var(--accent-cl);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background var(--animation);
+    }
+
+    #control-button:hover {
+        background: var(--accent-hover-cl);
+    }
+}

@@ -1,0 +1,142 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+input {
+    all: unset;
+}
+button {
+    border: unset;
+    color: inherit;
+}
+body {
+    font-family: 'Roboto', sans-serif !important;
+    color: var(--text-cl) !important;
+    background: var(--bg-cl);
+}
+a, a:link, a:visited  {
+    text-decoration: none;
+    color: var(--text-cl);
+
+}
+a:hover  {
+    text-decoration: none;
+}
+.hover {
+    transition: var(--animation);
+}
+
+svg {
+    opacity: 33%;
+}
+.hover:not(.selected):hover {
+    background-color: var(--accent-hover-cl) !important;
+}
+.selected {
+    background: var(--accent-cl) !important;
+}
+
+.awesome {
+    color: var(--text-cl);
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../../fonts/Roboto-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url(../../fonts/FiraCode-Regular.ttf);
+}
+
+:root {
+    --bg-dark-cl: #323335;
+    --bg-light-cl: #fff;
+
+    --accent-light-cl: #fff4f4;
+    --accent-dark-cl: #303030;
+
+    --accent-hover-light-cl: #ffe7e7;
+    --accent-hover-dark-cl: #282a2b;
+
+    --text-active-dark-cl: #dadada;
+    --text-dark-cl: #bdbdbd;
+
+    --text-active-light-cl: #2f2f2f;
+    --text-light-cl: #4e4e4e;
+
+    --scrollbar-light-cl: rgb(171, 167, 166);
+    --scrollbar-dark-cl: rgb(88, 86, 85);
+
+    --animation: .33s ease;
+
+    --blur: .90;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-cl);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+.loader {
+    margin: auto;
+    border: 2px solid var(--text-cl);
+    border-radius: 50%;
+    border-top: 2px solid var(--accent-cl);
+    width: 25px;
+    height: 25px;
+    animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-answer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+}
+
+code {
+    font-family: 'Fira Code';
+    background: var(--bg-cl);
+}
+
+code[class*="language"] {
+    margin: 10px 0;
+    border-radius: 10px;
+    padding: 5px;
+    display: block;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+code {
+    border-radius: 6px;
+    padding: 2px 5px;
+}
+
+p {
+    margin: 5px 0;
+}
+
+ul, ol {
+    margin-left: 20px;
+}

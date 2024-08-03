@@ -1,0 +1,21 @@
+{
+    "name": "BreadChatAI",
+    "version": "0.28.152r-beta",
+    "description": "Powerful AI Chat",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder --windows"
+    },
+    "dependencies": {
+        "openai": "^4.4.0"
+    },
+    "devDependencies": {
+        "electron": "^26.1.0",
+        "electron-builder": "^24.6.4"
+    },
+    "author": "UndevSoftware",
+    "build": {
+        "asar": false
+    }
+}

@@ -1,0 +1,17 @@
+.notifier {
+    position: absolute;
+    width: 100%;
+    bottom: -100%;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 2000;
+    padding-bottom: 40px;
+
+    .notifier__note {
+        background: var(--accent-hover-cl);
+        user-select: none;
+        border-radius: 6px;
+        padding: 10px;
+    }
+}
